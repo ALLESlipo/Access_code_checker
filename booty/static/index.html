@@ -1,0 +1,126 @@
+<!doctype html>
+<!--
+  Booty - access code checker (front end).
+  Structure:
+    header            logo, reference-file summary, voice toggle, tutorial button
+    #method-card      the two method checkboxes (PDF default) + inputs
+    #results-card     summary counters, warnings, result table
+    #tour             the voiced tutorial popup (logic in app.js -> Tour)
+  All behaviour lives in /static/app.js, all styling in /static/style.css.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Booty · Access Code Checker</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%237c4dff'/><text x='32' y='43' font-size='32' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'>B</text></svg>">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="avatar" aria-hidden="true">B</div>
+      <div>
+        <h1>Booty</h1>
+        <p class="subtitle">Access code checker</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <span id="ref-summary" class="ref-summary" title="Reference files in existing_access_codes">Loading reference files…</span>
+      <button id="voice-toggle" class="icon-btn" type="button" aria-pressed="true" title="Booty's voice is on – click to mute">
+        <span class="icon" aria-hidden="true">🔊</span><span class="label">Voice on</span>
+      </button>
+      <!-- Filled by Voice.refresh() in app.js with the browser's English voices -->
+      <select id="voice-select" class="voice-select" title="Choose Booty's voice (plays a sample)" aria-label="Booty's voice" hidden></select>
+      <button id="help-btn" class="icon-btn" type="button" title="Show the tutorial">
+        <span class="icon" aria-hidden="true">?</span><span class="label">Tutorial</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section id="method-card" class="card">
+      <h2>1 · Choose how to check</h2>
+      <div class="methods" id="methods">
+        <label class="method">
+          <input type="checkbox" id="use-pdf" checked>
+          <span class="method-box">
+            <span class="method-title">📄 Upload PDFs</span>
+            <span class="method-desc">One or more kit inserts or lab reports – detected automatically</span>
+          </span>
+        </label>
+        <label class="method">
+          <input type="checkbox" id="use-text">
+          <span class="method-box">
+            <span class="method-title">⌨️ Type codes</span>
+            <span class="method-desc">Type or paste codes, separated by commas</span>
+          </span>
+        </label>
+      </div>
+
+      <div id="pdf-section" class="input-section">
+        <h3>2 · Upload the PDFs</h3>
+        <label id="dropzone" class="dropzone" tabindex="0">
+          <input type="file" id="pdf-input" accept="application/pdf,.pdf" multiple hidden>
+          <span id="dropzone-text">Drop one or more PDFs here or <u>click to choose files</u></span>
+        </label>
+        <!-- Chosen files; filled by Checker.renderFiles() in app.js -->
+        <div id="file-list-wrap" class="file-list-wrap" hidden>
+          <div class="file-list-head">
+            <span id="file-count"></span>
+            <button id="clear-files" class="link-btn" type="button">Remove all</button>
+          </div>
+          <ul id="file-list" class="file-list"></ul>
+        </div>
+      </div>
+
+      <div id="text-section" class="input-section" hidden>
+        <h3><span id="text-step">2</span> · Type the codes</h3>
+        <textarea id="codes-input" rows="3" spellcheck="false" placeholder="e.g. ABC234XYZ, KLM567PQR"></textarea>
+        <p class="hint">Separate codes with commas. Spaces, semicolons and new lines work too; capitals don't matter.</p>
+      </div>
+
+      <div class="actions">
+        <button id="check-btn" class="primary" type="button">Check codes</button>
+        <span id="form-error" class="form-error" role="alert"></span>
+      </div>
+    </section>
+
+    <section id="results-card" class="card" hidden>
+      <h2>Results</h2>
+      <div id="counters" class="counters"></div>
+      <ul id="warnings" class="warnings"></ul>
+      <div class="table-wrap">
+        <table id="results-table">
+          <thead>
+            <tr><th>Code</th><th>Result</th><th>From</th><th>Where it was found</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Tutorial popup (see Tour in app.js) -->
+  <div id="tour-backdrop" class="tour-backdrop" hidden></div>
+  <aside id="tour" class="tour" role="dialog" aria-modal="false" aria-labelledby="tour-title" hidden>
+    <div class="tour-head">
+      <div class="avatar small" aria-hidden="true">B</div>
+      <div>
+        <p class="tour-who">Booty</p>
+        <h2 id="tour-title"></h2>
+      </div>
+      <button id="tour-close" class="tour-x" type="button" aria-label="Close tutorial">×</button>
+    </div>
+    <div id="tour-body" class="tour-body"></div>
+    <div class="tour-foot">
+      <span id="tour-progress" class="tour-progress"></span>
+      <button id="tour-replay" class="ghost" type="button" title="Read this step aloud again">🔊 Replay</button>
+      <button id="tour-back" class="ghost" type="button">Back</button>
+      <button id="tour-next" class="primary" type="button">Next</button>
+    </div>
+  </aside>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

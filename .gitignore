@@ -1,0 +1,20 @@
+# ---- Sensitive data: NEVER commit (the repository is public) ----
+# Real access-code exports and Booty's automatic backups of them.
+existing_access_codes/*
+!existing_access_codes/README.md
+# PDFs contain real access codes / patient sample IDs (kit inserts, lab reports).
+*.pdf
+# Spreadsheets / exports anywhere in the project.
+*.xlsx
+*.xls
+*.csv
+.booty_backups/
+
+# ---- Python / editor clutter ----
+__pycache__/
+*.pyc
+.venv/
+.vscode/
+.idea/
+*.swp
+.DS_Store
